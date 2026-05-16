@@ -1,36 +1,4 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: test-proj-app
-    restart: unless-stopped
-    command: npm run start:dev
-    ports:
-      - "${APP_PORT:-3000}:${APP_PORT:-3000}"
-    environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      APP_PORT: ${APP_PORT:-3000}
-      DB_HOST: postgres
-      DB_PORT: ${POSTGRES_PORT:-5432}
-      DB_USER: ${POSTGRES_USER:-app}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-app}
-      DB_NAME: ${POSTGRES_DB:-app}
-      REDIS_HOST: redis
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - backend
-
   postgres:
     image: postgres:16-alpine
     container_name: test-proj-postgres
