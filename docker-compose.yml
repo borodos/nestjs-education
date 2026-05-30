@@ -1,24 +1,24 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: test-proj-app
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "${APP_PORT:-3000}:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - backend
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: test-proj-app
+#    restart: unless-stopped
+#    env_file:
+#      - .env
+#    ports:
+#      - "${APP_PORT:-3000}:3000"
+#    volumes:
+#      - .:/app
+#      - /app/node_modules
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    networks:
+#      - backend
 
   postgres:
     image: postgres:16-alpine
