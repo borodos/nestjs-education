@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard.js';
@@ -19,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { ResponsePaginationUsersDto } from './dto/response-pagination-users.dto.js';
 import { ResponseUserDto } from './dto/response-user.dto.js';
+import type { Request } from 'express';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -72,7 +74,7 @@ export class UserController {
     example: 'Пользователь не найден',
   })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    return this.usersService.remove(id, req.user);
   }
 }

@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '../../../generated/prisma/client.js';
 import { QueryPaginateDto } from '../../common/dto/query-paginate.dto.js';
 import { UserWhereInput } from '../../../generated/prisma/models/User.js';
@@ -55,7 +60,11 @@ export class UserService {
     return user;
   }
 
-  async remove(id: number): Promise<User> {
+  async remove(id: number, authUser: Express.User | undefined): Promise<User> {
+    if (authUser?.id !== id) {
+      throw new BadRequestException('Можно удалить только свой аккаунт!');
+    }
+
     return this.usersRepository.softDelete(id);
   }
 }

@@ -62,7 +62,8 @@ export class ProfilesController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProfileDto: UpdateProfileDTO,
+    @Req() req: Request,
   ) {
-    return this.profilesService.update(id, updateProfileDto);
+    return this.profilesService.update(id, updateProfileDto, req.user);
   }
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   NotFoundException,
@@ -26,9 +27,17 @@ export class ProfilesService {
     return await this.profilesRepository.findByUserId(authUser.id);
   }
 
-  async update(id: number, data: UpdateProfileDTO): Promise<Profile | null> {
+  async update(
+    id: number,
+    data: UpdateProfileDTO,
+    authUser: Express.User | undefined,
+  ): Promise<Profile | null> {
     const profile = await this.profilesRepository.findById(id);
     if (!profile) throw new NotFoundException('Профиль не найден!');
+
+    if (authUser?.id !== profile.user_id) {
+      throw new BadRequestException('Можно изменить только свой профиль!');
+    }
 
     return await this.profilesRepository.update(id, data);
   }

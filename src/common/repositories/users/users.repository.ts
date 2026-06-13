@@ -14,13 +14,13 @@ export class UsersRepository implements IUsersRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findById(id: number): Promise<User | null> {
-    return this.prismaService.user.findUnique({
+    return this.prismaService.user.findFirst({
       where: { id, deleted_at: null },
     });
   }
 
   async findByLogin(login: string): Promise<User | null> {
-    return this.prismaService.user.findUnique({
+    return this.prismaService.user.findFirst({
       where: { login, deleted_at: null },
     });
   }
