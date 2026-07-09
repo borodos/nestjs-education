@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../../generated/prisma"
 }
 
 datasource db {
@@ -15,15 +15,16 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
-  login         String  @unique
+  login         String   @unique
   password      String
   refresh_token String?
+  balance       Decimal @default(0) @db.Decimal(10, 2)
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  profile    Profile?
+  profile Profile?
 }
 
 model Profile {
@@ -35,7 +36,11 @@ model Profile {
   age         Int
   description String
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   deleted_at DateTime?
+
+  avatars Avatar[]
+
+  @@index([user_id])
 }

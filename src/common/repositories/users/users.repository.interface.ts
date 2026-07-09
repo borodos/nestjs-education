@@ -26,6 +26,10 @@ export type ResultUsersPaginate = {
   total: number;
 };
 
+export type ActiveUserRaw = UserGetPayload<{
+  include: { profile: { include: { avatars: true } } };
+}>;
+
 export interface IUsersRepository extends IBaseRepository<
   User,
   CreateUserDto,
@@ -34,6 +38,7 @@ export interface IUsersRepository extends IBaseRepository<
   findByLogin(login: string): Promise<User | null>;
   paginate(params: UsersPaginate): Promise<ResultUsersPaginate>;
   softDelete(id: number): Promise<User>;
+  getActive(minAge: number, maxAge: number): Promise<ActiveUserRaw[]>;
 }
 
 export const USERS_REPOSITORY = Symbol('USERS_REPOSITORY');

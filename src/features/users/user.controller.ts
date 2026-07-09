@@ -7,6 +7,7 @@ import {
   UseGuards,
   Query,
   Req,
+  Body,
 } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { JwtAccessGuard } from '../../auth/guards/jwt-access.guard.js';
@@ -21,6 +22,7 @@ import {
 import { ResponsePaginationUsersDto } from './dto/response-pagination-users.dto.js';
 import { ResponseUserDto } from './dto/response-user.dto.js';
 import type { Request } from 'express';
+import { GetActiveUsersBodyDto } from './dto/get-active-users-body.dto.js';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -40,6 +42,11 @@ export class UserController {
   @Get()
   findAll(@Query() params: QueryPaginateDto) {
     return this.usersService.findAll(params);
+  }
+
+  @Get('active')
+  getActive(@Body() body: GetActiveUsersBodyDto) {
+    return this.usersService.getActiveUsers(body);
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })

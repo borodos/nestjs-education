@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  ActiveUserRaw,
   IUsersRepository,
   ResultUsersPaginate,
   UsersPaginate,
@@ -74,6 +75,42 @@ export class UsersRepository implements IUsersRepository {
           update: {
             data: {
               deleted_at: new Date(),
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getActive(minAge: number, maxAge: number): Promise<ActiveUserRaw[]> {
+    const groups = await this.prismaService.avatar.groupBy({
+      by: ['profileId'],
+      where: { deletedAt: null },
+      having: {
+        id: { _count: { equals: 2 } },
+      },
+    });
+
+    const profileIds = groups.map((g) => g.profileId);
+    if (profileIds.length === 0) return [];
+
+    return this.prismaService.user.findMany({
+      where: {
+        deleted_at: null,
+        profile: {
+          deleted_at: null,
+          description: { not: '' },
+          age: { gte: minAge, lte: maxAge },
+          id: { in: profileIds },
+        },
+      },
+      include: {
+        profile: {
+          include: {
+            avatars: {
+              where: { deletedAt: null },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
             },
           },
         },
