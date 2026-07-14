@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   ActiveUserRaw,
   IUsersRepository,
   ResultUsersPaginate,
+  UsersForBalanceOperation,
   UsersPaginate,
 } from './users.repository.interface.js';
 import { PrismaService } from '../../../providers/databases/prisma/prisma.service.js';
@@ -116,5 +121,30 @@ export class UsersRepository implements IUsersRepository {
         },
       },
     });
+  }
+
+  async findUsersForBalanceOperation(
+    toUserId: number,
+    currentUserId: number,
+  ): Promise<UsersForBalanceOperation> {
+    if (toUserId === currentUserId) {
+      throw new BadRequestException('Нельзя выполнить операцию с самим собой');
+    }
+
+    const users = await this.prismaService.user.findMany({
+      where: {
+        deleted_at: null,
+        id: { in: [toUserId, currentUserId] },
+      },
+    });
+
+    const toUser = users.find((user) => user.id === toUserId);
+    const currentUser = users.find((user) => user.id === currentUserId);
+
+    if (!toUser || !currentUser) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+
+    return { toUser, currentUser };
   }
 }

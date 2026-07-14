@@ -1,8 +1,7 @@
 import {
-  HttpException,
   Inject,
   Injectable,
-  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import {
   type IUsersRepository,
@@ -26,27 +25,17 @@ export class BalanceService {
     logger.setContext(BalanceService.name);
   }
 
-  async transfer(
-    authUser: Express.User,
-    data: TransferBodyDto,
-  ): Promise<string> {
-    const toUser = await this.usersRepository.findById(data.toUserId);
-    const currentUser = await this.usersRepository.findById(authUser.id);
-
-    if (!toUser) {
-      this.logger.error(`Пользователь не найден: ${data.toUserId}`);
-      throw new NotFoundException('Пользователь не найден!');
-    }
-
-    if (!currentUser) {
-      this.logger.error(`Текущий пользователь не найден: ${authUser.id}`);
-      throw new NotFoundException('Текущий пользователь не найден!');
-    }
+  async transfer(authUser: Express.User, data: TransferBodyDto) {
+    const { toUser, currentUser } =
+      await this.usersRepository.findUsersForBalanceOperation(
+        data.toUserId,
+        authUser.id,
+      );
 
     const currentUserBalance = new Decimal(currentUser.balance);
     if (currentUserBalance.toNumber() === 0) {
       this.logger.error(`Баланс инициирующего пользователя равен нулю!`);
-      throw new HttpException('Нулевой баланс!', 500);
+      throw new UnprocessableEntityException('Нулевой баланс!');
     }
 
     const amount = new Decimal(data.amount);
@@ -56,7 +45,7 @@ export class BalanceService {
       this.logger.error(
         `Баланс инициирующего пользователя не может быть отрицательным!`,
       );
-      throw new HttpException('Не хватает денег!', 500);
+      throw new UnprocessableEntityException('Не хватает денег!');
     }
 
     const toUserBalance = new Decimal(toUser.balance);

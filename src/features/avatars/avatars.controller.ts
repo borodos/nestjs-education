@@ -15,6 +15,7 @@ import { FileSizeValidationPipe } from '../../common/pipes/file-size-validation.
 import { FileTypeValidationPipe } from '../../common/pipes/file-type-validation.pipe.js';
 import type { Request } from 'express';
 import { AvatarsService } from './avatars.service.js';
+import { MAX_AVATAR_FILE_SIZE } from '../../constants.js';
 
 @UseGuards(JwtAccessGuard)
 @Controller('profiles/avatars')
@@ -26,7 +27,7 @@ export class AvatarsController {
   addAvatar(
     @Req() req: Request,
     @UploadedFile(
-      new FileSizeValidationPipe({ maxSize: 1000000 }),
+      new FileSizeValidationPipe({ maxSize: MAX_AVATAR_FILE_SIZE }),
       new FileTypeValidationPipe({ types: ['image/png', 'image/jpeg'] }),
     )
     file: Express.Multer.File,

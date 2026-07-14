@@ -30,6 +30,11 @@ export type ActiveUserRaw = UserGetPayload<{
   include: { profile: { include: { avatars: true } } };
 }>;
 
+export type UsersForBalanceOperation = {
+  toUser: User;
+  currentUser: User;
+};
+
 export interface IUsersRepository extends IBaseRepository<
   User,
   CreateUserDto,
@@ -39,6 +44,10 @@ export interface IUsersRepository extends IBaseRepository<
   paginate(params: UsersPaginate): Promise<ResultUsersPaginate>;
   softDelete(id: number): Promise<User>;
   getActive(minAge: number, maxAge: number): Promise<ActiveUserRaw[]>;
+  findUsersForBalanceOperation(
+    toUserId: number,
+    currentUserId: number,
+  ): Promise<UsersForBalanceOperation>;
 }
 
 export const USERS_REPOSITORY = Symbol('USERS_REPOSITORY');
