@@ -17,6 +17,8 @@ import { UpdateUserDto } from '../../../features/users/dto/update-user.dto.js';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
+  private COUNT_AVATARS_OF_ACTIVE_USERS = 2;
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async findById(id: number): Promise<User | null> {
@@ -92,7 +94,7 @@ export class UsersRepository implements IUsersRepository {
       by: ['profileId'],
       where: { deletedAt: null },
       having: {
-        id: { _count: { equals: 2 } },
+        id: { _count: { equals: this.COUNT_AVATARS_OF_ACTIVE_USERS } },
       },
     });
 
@@ -146,5 +148,23 @@ export class UsersRepository implements IUsersRepository {
     }
 
     return { toUser, currentUser };
+  }
+
+  async transferFunds(
+    currentUserId: number,
+    currentUserBalance: number,
+    toUserId: number,
+    toUserBalance: number,
+  ): Promise<User[]> {
+    return await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: currentUserId },
+        data: { balance: currentUserBalance },
+      }),
+      this.prismaService.user.update({
+        where: { id: toUserId },
+        data: { balance: toUserBalance },
+      }),
+    ]);
   }
 }

@@ -13,7 +13,7 @@ import {
   USERS_REPOSITORY,
 } from '../../common/repositories/users/users.repository.interface.js';
 import { PaginateService } from '../../common/services/paginate.service.js';
-import { GetActiveUsersBodyDto } from './dto/get-active-users-body.dto.js';
+import { GetActiveUsersParamsDto } from './dto/get-active-users-params.dto.js';
 import { CacheService } from '../../providers/cache/cache.service.js';
 import { CustomLoggerService } from '../../providers/logger/logger.service.js';
 
@@ -111,7 +111,7 @@ export class UserService {
     return this.usersRepository.softDelete(id);
   }
 
-  async getActiveUsers(data: GetActiveUsersBodyDto): Promise<ActiveUser[]> {
+  async getActiveUsers(data: GetActiveUsersParamsDto): Promise<ActiveUser[]> {
     const users = await this.usersRepository.getActive(
       data.minAge,
       data.maxAge,

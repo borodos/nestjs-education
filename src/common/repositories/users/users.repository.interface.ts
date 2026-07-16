@@ -48,6 +48,12 @@ export interface IUsersRepository extends IBaseRepository<
     toUserId: number,
     currentUserId: number,
   ): Promise<UsersForBalanceOperation>;
+  transferFunds(
+    currentUserId: number,
+    currentUserBalance: number,
+    toUserId: number,
+    toUserBalance: number,
+  ): Promise<User[]>;
 }
 
 export const USERS_REPOSITORY = Symbol('USERS_REPOSITORY');

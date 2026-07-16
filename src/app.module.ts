@@ -22,7 +22,7 @@ import { SchedulerModule } from './providers/scheduler/scheduler.module.js';
       useFactory: (configService: ConfigService) => ({
         connection: {
           host: configService.getOrThrow('redisHost'),
-          port: 6379,
+          port: configService.getOrThrow('redisPort'),
         },
       }),
       inject: [ConfigService],

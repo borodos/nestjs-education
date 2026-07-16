@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -56,18 +57,18 @@ export class AvatarsService {
 
     if (!profile) {
       this.logger.error('Профиль пользователя не найден!');
-      throw new Error('Профиль пользователя не найден!');
+      throw new NotFoundException('Профиль пользователя не найден!');
     }
 
     const avatars: Avatar[] = await this.avatarsRepository.findByProfileId(
       profile.id,
     );
 
-    if (avatars.length > this.DEFAULT_COUNT_AVATARS) {
+    if (avatars.length >= this.DEFAULT_COUNT_AVATARS) {
       this.logger.error(
         `Профиль ID:${profile.id} имеет максимальное кол-во аватарок!`,
       );
-      throw new Error(
+      throw new ForbiddenException(
         `Профиль ID:${profile.id} имеет максимальное кол-во аватарок!`,
       );
     }
