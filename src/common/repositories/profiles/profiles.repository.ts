@@ -12,18 +12,27 @@ export class ProfilesRepository implements IProfilesRepository {
   async findByUserId(userId: number): Promise<Profile | null> {
     return this.prismaService.profile.findUnique({
       where: { user_id: userId, deleted_at: null },
+      include: {
+        avatars: {
+          where: {
+            deletedAt: null,
+          },
+        },
+      },
     });
   }
 
   async findById(id: number): Promise<Profile | null> {
     return this.prismaService.profile.findUnique({
       where: { id, deleted_at: null },
+      include: { avatars: true },
     });
   }
 
   async findAll(): Promise<Profile[]> {
     return this.prismaService.profile.findMany({
       where: { deleted_at: null },
+      include: { avatars: true },
     });
   }
 

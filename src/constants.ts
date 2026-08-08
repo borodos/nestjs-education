@@ -9,3 +9,5 @@ export const refreshCookieOptions: CookieOptions = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
   path: '/auth',
 };
+
+export const MAX_AVATAR_FILE_SIZE = 1000000;

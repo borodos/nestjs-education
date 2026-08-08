@@ -21,6 +21,7 @@ import {
 import { ResponsePaginationUsersDto } from './dto/response-pagination-users.dto.js';
 import { ResponseUserDto } from './dto/response-user.dto.js';
 import type { Request } from 'express';
+import { GetActiveUsersParamsDto } from './dto/get-active-users-params.dto.js';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -40,6 +41,11 @@ export class UserController {
   @Get()
   findAll(@Query() params: QueryPaginateDto) {
     return this.usersService.findAll(params);
+  }
+
+  @Get('active')
+  getActive(@Query() params: GetActiveUsersParamsDto) {
+    return this.usersService.getActiveUsers(params);
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })

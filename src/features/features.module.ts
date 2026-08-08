@@ -4,6 +4,8 @@ import { AuthModule } from '../auth/auth.module.js';
 import { APP_INTERCEPTOR, RouterModule } from '@nestjs/core';
 import { ProfilesModule } from './profiles/profiles.module.js';
 import { ResponseInterceptor } from '../common/interceptors/response.interceptor.js';
+import { AvatarsModule } from './avatars/avatars.module.js';
+import { BalanceModule } from './balance/balance.module.js';
 
 @Module({
   imports: [
@@ -19,7 +21,16 @@ import { ResponseInterceptor } from '../common/interceptors/response.interceptor
         path: 'api',
         module: ProfilesModule,
       },
+      {
+        path: 'api',
+        module: AvatarsModule,
+      },
+      {
+        path: 'api',
+        module: BalanceModule,
+      },
     ]),
+    BalanceModule,
   ],
   providers: [
     {

@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
 import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  ActiveUserRaw,
   IUsersRepository,
   ResultUsersPaginate,
+  UsersForBalanceOperation,
   UsersPaginate,
 } from './users.repository.interface.js';
 import { PrismaService } from '../../../providers/databases/prisma/prisma.service.js';
@@ -11,6 +17,8 @@ import { UpdateUserDto } from '../../../features/users/dto/update-user.dto.js';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
+  private COUNT_AVATARS_OF_ACTIVE_USERS = 2;
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async findById(id: number): Promise<User | null> {
@@ -79,5 +87,84 @@ export class UsersRepository implements IUsersRepository {
         },
       },
     });
+  }
+
+  async getActive(minAge: number, maxAge: number): Promise<ActiveUserRaw[]> {
+    const groups = await this.prismaService.avatar.groupBy({
+      by: ['profileId'],
+      where: { deletedAt: null },
+      having: {
+        id: { _count: { equals: this.COUNT_AVATARS_OF_ACTIVE_USERS } },
+      },
+    });
+
+    const profileIds = groups.map((g) => g.profileId);
+    if (profileIds.length === 0) return [];
+
+    return this.prismaService.user.findMany({
+      where: {
+        deleted_at: null,
+        profile: {
+          deleted_at: null,
+          description: { not: '' },
+          age: { gte: minAge, lte: maxAge },
+          id: { in: profileIds },
+        },
+      },
+      include: {
+        profile: {
+          include: {
+            avatars: {
+              where: { deletedAt: null },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async findUsersForBalanceOperation(
+    toUserId: number,
+    currentUserId: number,
+  ): Promise<UsersForBalanceOperation> {
+    if (toUserId === currentUserId) {
+      throw new BadRequestException('Нельзя выполнить операцию с самим собой');
+    }
+
+    const users = await this.prismaService.user.findMany({
+      where: {
+        deleted_at: null,
+        id: { in: [toUserId, currentUserId] },
+      },
+    });
+
+    const toUser = users.find((user) => user.id === toUserId);
+    const currentUser = users.find((user) => user.id === currentUserId);
+
+    if (!toUser || !currentUser) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+
+    return { toUser, currentUser };
+  }
+
+  async transferFunds(
+    currentUserId: number,
+    currentUserBalance: number,
+    toUserId: number,
+    toUserBalance: number,
+  ): Promise<User[]> {
+    return await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: currentUserId },
+        data: { balance: currentUserBalance },
+      }),
+      this.prismaService.user.update({
+        where: { id: toUserId },
+        data: { balance: toUserBalance },
+      }),
+    ]);
   }
 }

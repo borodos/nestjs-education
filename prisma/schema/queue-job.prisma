@@ -1,0 +1,24 @@
+enum QueueJobStatus {
+  WAITING
+  ACTIVE
+  COMPLETED
+  FAILED
+  DELAYED
+}
+
+model QueueJob {
+  id           Int            @id @default(autoincrement())
+  jobId        String         @unique @map("job_id")
+  queueName    String         @map("queue_name")
+  jobName      String         @map("job_name")
+  status       QueueJobStatus @default(WAITING)
+  payload      Json
+  result       Json?
+  failedReason String?        @map("failed_reason")
+  attempts     Int            @default(0) @map("attempts")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("queue_jobs")
+}
