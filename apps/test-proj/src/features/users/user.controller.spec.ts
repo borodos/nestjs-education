@@ -2,15 +2,16 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { jest } from '@jest/globals';
+import type { Request } from 'express';
+import { User } from '../../../../../generated/prisma/client';
 
 describe('UserController', () => {
   let controller: UserController;
-  let service: UserService;
 
   const mockUserService = {
-    findAll: jest.fn(),
-    findById: jest.fn(),
-    remove: jest.fn(),
+    findAll: jest.fn<UserService['findAll']>(),
+    findById: jest.fn<UserService['findById']>(),
+    remove: jest.fn<UserService['remove']>(),
   };
 
   beforeEach(async () => {
@@ -25,7 +26,6 @@ describe('UserController', () => {
     }).compile();
 
     controller = module.get<UserController>(UserController);
-    service = module.get<UserService>(UserService);
   });
 
   afterEach(() => {
@@ -52,9 +52,9 @@ describe('UserController', () => {
       };
       mockUserService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll(params as any);
+      const result = await controller.findAll(params);
 
-      expect(service.findAll).toHaveBeenCalledWith(params);
+      expect(mockUserService.findAll).toHaveBeenCalledWith(params);
       expect(result).toBe(expected);
     });
   });
@@ -66,19 +66,21 @@ describe('UserController', () => {
 
       const result = await controller.findById(1);
 
-      expect(service.findById).toHaveBeenCalledWith(1);
+      expect(mockUserService.findById).toHaveBeenCalledWith(1);
       expect(result).toBe(user);
     });
   });
 
   describe('remove', () => {
     it('Вызывает service.remove с числовым id', async () => {
-      const user = { id: 1, deleted_at: new Date() };
+      const user = { id: 1, deleted_at: new Date() } as User;
       mockUserService.remove.mockResolvedValue(user);
 
-      const result = await controller.remove(1);
+      const req = { user: { id: 1, login: 'ivan' } } as Request;
 
-      expect(service.remove).toHaveBeenCalledWith(1);
+      const result = await controller.remove(1, req);
+
+      expect(mockUserService.remove).toHaveBeenCalledWith(1, req.user);
       expect(result).toBe(user);
     });
   });

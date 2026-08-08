@@ -14,10 +14,10 @@
     "start:prod": "node dist/apps/test-proj/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/test-proj/test/jest-e2e.json",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:cov": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test:debug": "node --experimental-vm-modules --inspect-brk node_modules/jest/bin/jest.js --runInBand",
+    "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./apps/test-proj/test/jest-e2e.json",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
@@ -104,17 +104,14 @@
       "^.+\\.tsx?$": [
         "ts-jest",
         {
-          "useESM": true
+          "tsconfig": {
+            "module": "commonjs",
+            "moduleResolution": "node"
+          }
         }
       ]
     },
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
     "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1",
-      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/config-library(|/.*)$": "<rootDir>/libs/config-library/src/$1",
       "^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1"
     },
     "testEnvironment": "node",

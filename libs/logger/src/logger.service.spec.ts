@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@app/logger/logger.service';
 
 describe('LoggerService', () => {
   let service: LoggerService;
@@ -9,7 +9,7 @@ describe('LoggerService', () => {
       providers: [LoggerService],
     }).compile();
 
-    service = module.get<LoggerService>(LoggerService);
+    service = await module.resolve(LoggerService);
   });
 
   it('should be defined', () => {
