@@ -114,7 +114,7 @@
     },
     "testEnvironment": "node"
   },
-  "type": "module",
+  "type": "commonjs",
   "lint-staged": {
     "*.{js, jsx,ts,tsx}": [
       "eslint --quiet --fix"
