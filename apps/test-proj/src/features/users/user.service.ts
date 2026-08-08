@@ -12,10 +12,10 @@ import {
 import { PaginateService } from '../../common/services/paginate.service';
 import { GetActiveUsersParamsDto } from './dto/get-active-users-params.dto';
 import { CacheService } from '../../providers/cache/cache.service';
-import { CustomLoggerService } from '../../providers/logger/logger.service';
 import { Avatar, User } from '../../../../../generated/prisma/client';
 import { QueryPaginateDto } from '../../common/dto/query-paginate.dto';
 import { UserWhereInput } from '../../../../../generated/prisma/models/User';
+import { LoggerService } from '@app/logger';
 
 export type ActiveUser = Omit<ActiveUserRaw, 'profile'> & {
   profile:
@@ -32,7 +32,7 @@ export class UserService {
     private readonly usersRepository: IUsersRepository,
     private readonly paginateService: PaginateService,
     private readonly cacheService: CacheService,
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
   ) {
     logger.setContext(UserService.name);
   }

@@ -20,6 +20,25 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {}
+    "paths": {
+      "@app/config": [
+        "libs/config/src"
+      ],
+      "@app/config-library": [
+        "libs/config-library/src"
+      ],
+      "@app/config-library/*": [
+        "libs/config-library/src/*"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
+      "@app/logger": [
+        "libs/logger/src"
+      ],
+      "@app/logger/*": [
+        "libs/logger/src/*"
+      ]
+    }
   }
 }

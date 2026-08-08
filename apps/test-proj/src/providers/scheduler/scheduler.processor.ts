@@ -1,12 +1,12 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { CustomLoggerService } from '../logger/logger.service';
 import { PrismaService } from '../databases/prisma/prisma.service';
+import { LoggerService } from '@app/logger';
 
 @Processor('scheduler_queue')
 export class SchedulerProcessor extends WorkerHost {
   constructor(
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
     private readonly prismaService: PrismaService,
   ) {
     super();

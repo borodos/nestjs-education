@@ -6,9 +6,9 @@ import {
   QUEUES_REPOSITORY,
 } from '../../../common/repositories/queues/queue-jobs.repository.interface';
 import { QUEUE_NAMES } from '../queues';
-import { CustomLoggerService } from '../../logger/logger.service';
 import { ConfigService } from '@nestjs/config';
 import { CreateAvatarDto } from '../../../features/avatars/dto/create-avatar.dto';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class AvatarsQueueProducer {
@@ -19,7 +19,7 @@ export class AvatarsQueueProducer {
     @Inject(QUEUES_REPOSITORY)
     private readonly queueJobsRepository: IQueueJobsRepository,
 
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
     private readonly configService: ConfigService,
   ) {
     logger.setContext(AvatarsQueueProducer.name);

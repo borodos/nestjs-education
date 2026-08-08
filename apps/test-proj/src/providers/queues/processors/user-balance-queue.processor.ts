@@ -1,6 +1,5 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { CustomLoggerService } from '../../logger/logger.service';
 import { QUEUE_NAMES } from '../queues';
 import { Inject } from '@nestjs/common';
 import {
@@ -10,6 +9,7 @@ import {
 import { QueueJobStatus } from '../../../../../../generated/prisma/enums';
 import { InputJsonValue, JsonNull } from '@prisma/client/runtime/client';
 import { PrismaService } from '../../databases/prisma/prisma.service';
+import { LoggerService } from '@app/logger';
 
 @Processor(QUEUE_NAMES.userBalance)
 export class UserBalanceQueueProcessor extends WorkerHost {
@@ -17,7 +17,7 @@ export class UserBalanceQueueProcessor extends WorkerHost {
     @Inject(QUEUES_REPOSITORY)
     private readonly queueJobsRepository: IQueueJobsRepository,
     private readonly prismaService: PrismaService,
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
   ) {
     super();
     logger.setContext(UserBalanceQueueProcessor.name);

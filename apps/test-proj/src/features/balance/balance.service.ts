@@ -9,15 +9,15 @@ import {
 } from '../../common/repositories/users/users.repository.interface';
 import { TransferBodyDto } from './dto/transfer-body.dto';
 import { Decimal } from '../../../../../generated/prisma/internal/prismaNamespace';
-import { CustomLoggerService } from '../../providers/logger/logger.service';
 import { UserBalanceQueueProducer } from '../../providers/queues/producers/user-balance-queue.producer';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class BalanceService {
   constructor(
     @Inject(USERS_REPOSITORY)
     private readonly usersRepository: IUsersRepository,
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
     private readonly userBalanceQueueProducer: UserBalanceQueueProducer,
   ) {
     logger.setContext(BalanceService.name);

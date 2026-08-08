@@ -6,9 +6,9 @@ import {
   type IQueueJobsRepository,
   QUEUES_REPOSITORY,
 } from '../../../common/repositories/queues/queue-jobs.repository.interface';
-import { CustomLoggerService } from '../../logger/logger.service';
 import { ConfigService } from '@nestjs/config';
 import { InputJsonValue, JsonNull } from '@prisma/client/runtime/client';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class UserBalanceQueueProducer {
@@ -19,7 +19,7 @@ export class UserBalanceQueueProducer {
     @Inject(QUEUES_REPOSITORY)
     private readonly queueJobsRepository: IQueueJobsRepository,
 
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
     private readonly configService: ConfigService,
   ) {
     logger.setContext(UserBalanceQueueProducer.name);

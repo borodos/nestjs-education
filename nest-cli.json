@@ -10,6 +10,33 @@
   "monorepo": true,
   "root": "apps/test-proj",
   "projects": {
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "config-library": {
+      "type": "library",
+      "root": "libs/config-library",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-library/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-library/tsconfig.lib.json"
+      }
+    },
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    },
     "notification-service": {
       "type": "application",
       "root": "apps/notification-service",

@@ -12,12 +12,12 @@ import {
   CreateBucketCommand,
   PutBucketPolicyCommand,
 } from '@aws-sdk/client-s3';
-import { CustomLoggerService } from '../../logger/logger.service';
 import buckets from './constants/buckets';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class S3Service extends IFileService implements OnModuleInit {
-  private readonly logger = new CustomLoggerService(S3Service.name);
+  private readonly logger = new LoggerService(S3Service.name);
   private readonly bucketName = buckets.MY_BUCKET;
 
   constructor(@Inject(S3Lib) private readonly S3: AWS.S3) {

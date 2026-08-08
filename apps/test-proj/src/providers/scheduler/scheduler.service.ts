@@ -1,7 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { CustomLoggerService } from '../logger/logger.service';
 import { InjectQueue } from '@nestjs/bullmq';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class SchedulerService implements OnApplicationBootstrap {
@@ -9,7 +9,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     @InjectQueue('scheduler_queue')
     private readonly queue: Queue,
 
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
   ) {
     logger.setContext(SchedulerService.name);
   }

@@ -1,6 +1,5 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { CustomLoggerService } from '../../logger/logger.service';
 import { QUEUE_NAMES } from '../queues';
 import { Inject } from '@nestjs/common';
 import {
@@ -14,13 +13,14 @@ import {
   type IAvatarsRepository,
 } from '../../../common/repositories/avatars/avatars.repository.interface';
 import { CreateAvatarDto } from '../../../features/avatars/dto/create-avatar.dto';
+import { LoggerService } from '@app/logger';
 
 @Processor(QUEUE_NAMES.addAvatarToProfile)
 export class AvatarsQueueProcessor extends WorkerHost {
   constructor(
     @Inject(QUEUES_REPOSITORY)
     private readonly queueJobsRepository: IQueueJobsRepository,
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
 
     @Inject(AVATARS_REPOSITORY)
     private readonly avatarRepository: IAvatarsRepository,

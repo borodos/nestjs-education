@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { AvatarsQueueProducer } from '../../providers/queues/producers/avatars-queue.producer';
 import { uuidv7 } from 'uuidv7';
-import { CustomLoggerService } from '../../providers/logger/logger.service';
 import folders from '../../providers/files/s3/constants/folders';
 import { IFileService } from '../../providers/files/files.adapter';
 import { UploadFilePayloadDto } from '../../providers/files/s3/dto/upload-file-payload.dto';
@@ -22,6 +21,7 @@ import {
   AVATARS_REPOSITORY,
   type IAvatarsRepository,
 } from '../../common/repositories/avatars/avatars.repository.interface';
+import { LoggerService } from '@app/logger';
 
 @Injectable()
 export class AvatarsService {
@@ -29,7 +29,7 @@ export class AvatarsService {
 
   constructor(
     private readonly avatarsQueueProducer: AvatarsQueueProducer,
-    private readonly logger: CustomLoggerService,
+    private readonly logger: LoggerService,
     private readonly fileService: IFileService,
     private readonly configService: ConfigService,
 
