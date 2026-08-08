@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../generated/prisma/client.js';
-import usersSeed from './seeders/users.seed.js';
+import { PrismaClient } from '../generated/prisma/client';
+import usersSeed from './seeders/users.seed';
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });

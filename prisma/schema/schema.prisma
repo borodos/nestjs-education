@@ -9,7 +9,7 @@ generator client {
 
   runtime      = "nodejs"
   moduleFormat = "cjs"
-  importFileExtension = "js"
+  importFileExtension = "ts"
 }
 
 datasource db {
