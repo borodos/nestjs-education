@@ -8,9 +8,9 @@ import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
-      map((data: any) => ({
+      map((data: unknown) => ({
         success: true,
         timestamp: new Date().toISOString(),
         data,

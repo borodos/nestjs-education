@@ -5,6 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
 type JwtPayload = { sub: number; login: string };
+type RefreshCookies = { refresh_token?: string };
+
+const extractRefreshToken = (req: Request): string | null =>
+  (req.cookies as RefreshCookies | undefined)?.refresh_token ?? null;
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -13,9 +17,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
   constructor(private readonly configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (req: Request) => req?.cookies?.refresh_token ?? null,
-      ]),
+      jwtFromRequest: ExtractJwt.fromExtractors([extractRefreshToken]),
       ignoreExpiration: false,
       secretOrKey: configService.getOrThrow('jwtRefreshSecret'),
       passReqToCallback: true,
@@ -23,11 +25,10 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   validate(req: Request, payload: JwtPayload) {
-    const refreshToken = req.cookies?.refresh_token;
     return {
       id: payload.sub,
       login: payload.login,
-      refresh_token: refreshToken,
+      refresh_token: extractRefreshToken(req) ?? undefined,
     };
   }
 }
