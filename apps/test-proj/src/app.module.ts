@@ -8,6 +8,7 @@ import { QueuesModule } from './providers/queues/queues.module';
 import { CacheModule } from './providers/cache/cache.module';
 import { SchedulerModule } from './providers/scheduler/scheduler.module';
 import { LoggerModule } from '@app/logger';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -30,6 +31,25 @@ import { LoggerModule } from '@app/logger';
     CacheModule,
     QueuesModule,
     SchedulerModule,
+    ClientsModule.registerAsync({
+      isGlobal: true,
+      clients: [
+        {
+          name: 'NOTIFICATIONS_CLIENT',
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            transport: Transport.KAFKA,
+            options: {
+              client: {
+                clientId: 'users-service',
+                brokers: [configService.getOrThrow('kafkaBrokerUrl')],
+              },
+              producerOnlyMode: true,
+            },
+          }),
+        },
+      ],
+    }),
   ],
 })
 export class AppModule {}

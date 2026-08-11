@@ -11,4 +11,5 @@ export default () => ({
   defaultJobAttempts: 3,
   minioStorageUrl: process.env.MINIO_STORAGE_URL || '',
   defaultTTL: process.env.DEFAULT_TLL || '1m',
+  kafkaBrokerUrl: process.env.KAFKA_BARK_URL ?? 'localhost:9092',
 });

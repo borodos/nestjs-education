@@ -11,6 +11,8 @@ import { TransferBodyDto } from './dto/transfer-body.dto';
 import { Decimal } from '../../../../../generated/prisma/internal/prismaNamespace';
 import { UserBalanceQueueProducer } from '../../providers/queues/producers/user-balance-queue.producer';
 import { LoggerService } from '@app/logger';
+import { ClientKafka } from '@nestjs/microservices';
+import { KafkaTopic } from '@app/contracts';
 
 @Injectable()
 export class BalanceService {
@@ -19,6 +21,9 @@ export class BalanceService {
     private readonly usersRepository: IUsersRepository,
     private readonly logger: LoggerService,
     private readonly userBalanceQueueProducer: UserBalanceQueueProducer,
+
+    @Inject('NOTIFICATIONS_CLIENT')
+    private readonly kafkaProducer: ClientKafka,
   ) {
     logger.setContext(BalanceService.name);
   }
@@ -56,6 +61,12 @@ export class BalanceService {
       toUserBalanceResult.toNumber(),
     );
 
+    this.kafkaProducer.emit(KafkaTopic.BALANCE_UPDATED, {
+      currentUserId: currentUser.id,
+      toUserId: toUser.id,
+      amount: data.amount,
+      date: new Date().toISOString(),
+    });
     return 'Перевод успешно завершен!';
   }
 

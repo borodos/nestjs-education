@@ -21,24 +21,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/config": [
-        "libs/config/src"
-      ],
-      "@app/config-library": [
-        "libs/config-library/src"
-      ],
-      "@app/config-library/*": [
-        "libs/config-library/src/*"
-      ],
-      "@app/config/*": [
-        "libs/config/src/*"
-      ],
-      "@app/logger": [
-        "libs/logger/src"
-      ],
-      "@app/logger/*": [
-        "libs/logger/src/*"
-      ]
+      "@app/contracts": ["libs/contracts/src"],
+      "@app/contracts/*": ["libs/contracts/src/*"],
+      "@app/logger": ["libs/logger/src"],
+      "@app/logger/*": ["libs/logger/src/*"],
+      "@app/mongodb": ["libs/mongodb/src"],
+      "@app/mongodb/*": ["libs/mongodb/src/*"]
     }
   }
 }

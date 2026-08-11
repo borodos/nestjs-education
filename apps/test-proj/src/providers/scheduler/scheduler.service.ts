@@ -15,7 +15,7 @@ export class SchedulerService implements OnApplicationBootstrap {
   }
   async onApplicationBootstrap(): Promise<void> {
     await this.queue.upsertJobScheduler('nullify_balances_scheduler', {
-      every: 10000,
+      every: 100000,
     });
 
     this.logger.log(`Зарегистрирован планировщик nullify_balances_scheduler`);

@@ -10,22 +10,13 @@
   "monorepo": true,
   "root": "apps/test-proj",
   "projects": {
-    "config": {
+    "contracts": {
       "type": "library",
-      "root": "libs/config",
+      "root": "libs/contracts",
       "entryFile": "index",
-      "sourceRoot": "libs/config/src",
+      "sourceRoot": "libs/contracts/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/config/tsconfig.lib.json"
-      }
-    },
-    "config-library": {
-      "type": "library",
-      "root": "libs/config-library",
-      "entryFile": "index",
-      "sourceRoot": "libs/config-library/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/config-library/tsconfig.lib.json"
+        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
     },
     "logger": {
