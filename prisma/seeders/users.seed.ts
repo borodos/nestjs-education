@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/prisma/client.js';
+import { PrismaClient } from '../../generated/prisma/client';
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'node:crypto';
 import { faker } from '@faker-js/faker';
